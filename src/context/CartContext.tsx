@@ -24,6 +24,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [cart]);
 
   const addToCart = (product: Product) => {
+    // Trigger a short vibration on supported mobile devices
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      // A pattern of 100 ms gives a subtle feedback without being annoying
+      navigator.vibrate?.(100);
+    }
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.product.id === product.id);
       
