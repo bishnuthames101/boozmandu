@@ -12,10 +12,22 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+
+  const hasVariants = Array.isArray(product.variants) && (product.variants?.length ?? 0) > 0;
+  const variant = hasVariants ? product.variants?.[selectedVariantIndex] : null;
+
+  const displayPrice = hasVariants ? variant!.price : product.price;
+  const displayVolume = hasVariants ? variant!.volume : product.volume;
+  const displayImage = hasVariants && variant!.image ? variant!.image : product.image;
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCart(product);
+    if (hasVariants) {
+      addToCart({ ...product, ...variant });
+    } else {
+      addToCart(product);
+    }
   };
 
   const formatPrice = (price: number) => {
@@ -33,7 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       >
         <div className="relative overflow-hidden h-48 md:h-56">
           <img 
-            src={product.image} 
+            src={displayImage} 
             alt={product.name} 
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
@@ -50,14 +62,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="flex justify-between items-start mb-2">
             <h3 className="text-lg font-semibold text-white truncate">{product.name}</h3>
             <div className="text-amber-500 font-semibold">
-              {formatPrice(product.price)}
+              {formatPrice(displayPrice)}
             </div>
           </div>
           
           <div className="flex justify-between items-center text-xs text-gray-400 mb-3">
             <span>{product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
-            <span>{product.volume} | {product.alcoholPercentage}%</span>
+            <span>{displayVolume}{product.alcoholPercentage !== undefined ? ` | ${product.alcoholPercentage}%` : ''}</span>
           </div>
+          
+          {hasVariants && (
+            <div className="mb-3">
+              <select
+                className="w-full bg-gray-800 text-white p-2 rounded"
+                value={selectedVariantIndex}
+                onChange={e => setSelectedVariantIndex(Number(e.target.value))}
+              >
+                {(product.variants ?? []).map((v, idx) => (
+                  <option key={v.id} value={idx}>{v.volume} - {formatPrice(v.price)}</option>
+                ))}
+              </select>
+            </div>
+          )}
           
           <p className="text-gray-400 text-sm line-clamp-2 mb-4">{product.description}</p>
           

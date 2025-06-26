@@ -10,9 +10,15 @@ export interface Product {
   origin: string;
   inStock: boolean;
   featured?: boolean;
+  variants?: Array<{
+    id: string;
+    volume: string;
+    price: number;
+    image?: string;
+  }>;
 }
 
-export type ProductCategory = 'whisky' | 'vodka' | 'beer' | 'wine' | 'rum' | 'gin';
+export type ProductCategory = 'whisky' | 'vodka' | 'beer' | 'wine' | 'rum' | 'gin' | 'sodas' | 'energydrink' | 'cider' | 'localspirit'| 'juice' | 'soju'	| 'syrup' | 'vermouth';
 
 export interface CartItem {
   product: Product;
