@@ -23,6 +23,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
+    // Trigger a short vibration on supported mobile devices *immediately* within the user gesture
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate?.(100);
+    }
+
     if (hasVariants) {
       addToCart({ ...product, ...variant });
     } else {
