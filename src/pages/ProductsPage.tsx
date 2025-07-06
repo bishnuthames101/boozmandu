@@ -3,13 +3,18 @@ import { motion } from 'framer-motion';
 import { getProducts } from '../data/products';
 import ProductCard from '../components/ui/ProductCard';
 import CategoryFilter from '../components/ui/CategoryFilter';
+import Pagination from '../components/ui/Pagination';
 import { Product } from '../types';
+
+const PRODUCTS_PER_PAGE = 12;
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +29,15 @@ const ProductsPage: React.FC = () => {
 
   useEffect(() => {
     filterProducts(activeCategory, searchTerm);
+    setCurrentPage(1); // Reset to first page when filters change
   }, [activeCategory, searchTerm, products]);
+
+  useEffect(() => {
+    // Update displayed products based on current page
+    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    const endIndex = startIndex + PRODUCTS_PER_PAGE;
+    setDisplayedProducts(filteredProducts.slice(startIndex, endIndex));
+  }, [filteredProducts, currentPage]);
 
   const filterProducts = (category: string, term: string) => {
     let filtered = [...products];
@@ -56,6 +69,16 @@ const ProductsPage: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of products section
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+  };
+
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const startProduct = (currentPage - 1) * PRODUCTS_PER_PAGE + 1;
+  const endProduct = Math.min(currentPage * PRODUCTS_PER_PAGE, filteredProducts.length);
+
   return (
     <div className="py-16 pt-32">
       <div className="container">
@@ -80,9 +103,23 @@ const ProductsPage: React.FC = () => {
           onCategoryChange={handleCategoryChange} 
         />
 
+        {/* Results Summary */}
+        {!isLoading && filteredProducts.length > 0 && (
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 text-sm text-gray-400">
+            <p>
+              Showing {startProduct}-{endProduct} of {filteredProducts.length} products
+            </p>
+            {totalPages > 1 && (
+              <p className="mt-2 sm:mt-0">
+                Page {currentPage} of {totalPages}
+              </p>
+            )}
+          </div>
+        )}
+
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((_, index) => (
               <div key={index} className="bg-gray-800 rounded-lg h-96 animate-pulse">
                 <div className="h-48 bg-gray-700 rounded-t-lg"></div>
                 <div className="p-4 space-y-3">
@@ -112,16 +149,33 @@ const ProductsPage: React.FC = () => {
                 </button>
               </div>
             ) : (
-              <motion.div 
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </motion.div>
+              <>
+                <motion.div 
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  key={currentPage} // Force re-animation when page changes
+                >
+                  {displayedProducts.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                    >
+                      <ProductCard product={product} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </>
             )}
           </>
         )}
