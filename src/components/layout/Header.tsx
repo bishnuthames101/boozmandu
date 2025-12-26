@@ -191,6 +191,14 @@ const Header: React.FC = () => {
                     <p className="text-white font-medium">{user.name}</p>
                     <p className="text-gray-400 text-sm">{user.email}</p>
                   </div>
+                  <Link
+                    href="/profile"
+                    className="w-full text-left px-4 py-2 text-gray-300 hover:text-white flex items-center"
+                    onClick={closeMenu}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    My Profile
+                  </Link>
                   <button
                     onClick={() => {
                       logout();
