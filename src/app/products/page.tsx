@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { getProducts } from '@/data/products';
 import ProductCard from '@/components/ui/ProductCard';
 import CategoryFilter from '@/components/ui/CategoryFilter';
 import Pagination from '@/components/ui/Pagination';
@@ -42,13 +41,25 @@ export default function ProductsPage() {
   }, [products]);
 
   useEffect(() => {
-    // Load products from local data
-    setTimeout(() => {
-      const allProducts = getProducts();
-      setProducts(allProducts);
-      setFilteredProducts(allProducts);
-      setIsLoading(false);
-    }, 500);
+    // Load products from database API
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products');
+        if (response.ok) {
+          const allProducts = await response.json();
+          setProducts(allProducts);
+          setFilteredProducts(allProducts);
+        } else {
+          console.error('Failed to fetch products');
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   useEffect(() => {
