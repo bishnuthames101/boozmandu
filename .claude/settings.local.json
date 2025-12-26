@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npm run prisma:seed:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: Enhance security and add Vercel deployment configuration\n\nSecurity improvements:\n- Update .gitignore to comprehensively block .env files\n- Add security checklist with credential rotation guidelines\n- Update .env.example with correct Supabase pooler configuration\n\nDeployment fixes:\n- Add vercel.json with proper build configuration\n- Fix DATABASE_URL format for Supabase pooler \\(add pgbouncer params\\)\n- Add comprehensive deployment guide with troubleshooting\n\nAdmin credentials documented:\n- Email: admin@boozmandu.com\n- Password: Boozmandu@Admin2024 \\(change after first login\\)\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(npx tsx:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.unbqclgutfxsfbmfbvzw:Boozmandu12@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?pgbouncer=true&connection_limit=1\" npx tsx scripts/delete-user.ts karkib523@gmail.com)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.unbqclgutfxsfbmfbvzw:Boozmandu12@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?pgbouncer=true&connection_limit=1\" npx tsx:*)",
+      "Bash(git push:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git reset:*)",
+      "Bash(vercel --version:*)",
+      "Bash(git init:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)"
+    ]
+  }
+}
