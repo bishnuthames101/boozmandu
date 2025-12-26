@@ -36,7 +36,7 @@ async function main() {
 
   // Create admin user
   console.log('👨‍💼 Creating admin user...');
-  const adminPassword = 'Boozmandu@Admin2024';
+  const adminPassword = 'admin123#';
   const hashedAdminPassword = await bcrypt.hash(adminPassword, 10);
 
   await prisma.admin.create({
@@ -50,7 +50,7 @@ async function main() {
   console.log('✅ Created admin user');
   console.log('📧 Email: admin@boozmandu.com');
   console.log('🔑 Password:', adminPassword);
-  console.log('⚠️  IMPORTANT: Change this password after first login!');
+  console.log('⚠️  IMPORTANT: This is your admin password!');
 
   // Seed users
   console.log('👤 Creating users...');
