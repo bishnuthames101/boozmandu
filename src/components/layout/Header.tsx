@@ -11,9 +11,15 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { getCartCount } = useCart();
   const { user, logout } = useAuth();
   const pathname = usePathname();
+
+  // Prevent hydration mismatch by only rendering cart count after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -129,7 +135,7 @@ const Header: React.FC = () => {
             aria-label="Shopping Cart"
           >
             <ShoppingCart className={`w-6 h-6 ${pathname === '/cart' ? 'text-amber-500' : 'text-white'}`} />
-            {getCartCount() > 0 && (
+            {mounted && getCartCount() > 0 && (
               <span className="absolute -top-2 -right-2 bg-amber-500 text-dark text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {getCartCount()}
               </span>
@@ -141,7 +147,7 @@ const Header: React.FC = () => {
         <div className="flex items-center space-x-4 md:hidden">
           <Link href="/cart" className="relative" aria-label="Shopping Cart">
             <ShoppingCart className="w-6 h-6 text-white" />
-            {getCartCount() > 0 && (
+            {mounted && getCartCount() > 0 && (
               <span className="absolute -top-2 -right-2 bg-amber-500 text-dark text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {getCartCount()}
               </span>
