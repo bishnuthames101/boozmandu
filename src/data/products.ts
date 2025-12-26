@@ -1183,7 +1183,20 @@ export const products: Product[] = [
     
 ];
 
-export const getProducts = () => products;
+// Generate UUIDs for products (fixes validation issue)
+export const getProducts = () => {
+  return products.map((product, index) => ({
+    ...product,
+    // Generate consistent UUID based on product index
+    id: `${index.toString().padStart(8, '0')}-0000-4000-8000-000000000000`.replace(
+      /^(\d{8})/,
+      (match) => match.slice(0, 8)
+    ).replace(
+      /^(.{8})(.{4})(.{4})(.{4})(.{12})/,
+      `$1-$2-$3-$4-${index.toString().padStart(12, '0')}`
+    )
+  }));
+};
 
 export const getProductsByCategory = (category: string) => {
   return products.filter(product => product.category === category);
