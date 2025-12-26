@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { products } from '../src/data/products';
+import { products as staticProducts } from '../src/data/products';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -78,11 +78,11 @@ async function main() {
 
   console.log(`✅ Created ${2} users`);
 
-  // Seed products
-  console.log('🍾 Creating products...');
+  // Seed products from static data file
+  console.log('🍾 Creating products from static data...');
   let productCount = 0;
 
-  for (const product of products) {
+  for (const product of staticProducts) {
     const categoryEnum = categoryMap[product.category.toLowerCase()] || 'WHISKY';
 
     // Check if product has variants
