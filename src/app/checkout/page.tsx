@@ -13,18 +13,24 @@ export default function CheckoutPage() {
   const { cart, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    name: user?.name || '',
-    phone: user?.phone || '',
-    address: user?.address || '',
+    name: '',
+    phone: '',
+    address: '',
     notes: ''
   });
   const [errors, setErrors] = useState<Partial<CustomerInfo>>({});
 
-  // Update form when user logs in
+  // Prevent hydration mismatch
   React.useEffect(() => {
-    if (user) {
+    setMounted(true);
+  }, []);
+
+  // Update form when user logs in or component mounts
+  React.useEffect(() => {
+    if (mounted && user) {
       setCustomerInfo(prev => ({
         ...prev,
         name: user.name,
@@ -32,13 +38,13 @@ export default function CheckoutPage() {
         address: user.address
       }));
     }
-  }, [user]);
+  }, [user, mounted]);
 
   React.useEffect(() => {
-    if (cart.length === 0 && !orderPlaced) {
+    if (mounted && cart.length === 0 && !orderPlaced) {
       router.push('/cart');
     }
-  }, [cart, orderPlaced, router]);
+  }, [cart, orderPlaced, router, mounted]);
 
   const formatPrice = (price: number) => {
     return `NPR ${price.toLocaleString()}`;
@@ -108,6 +114,8 @@ export default function CheckoutPage() {
           })),
         };
 
+        console.log('Sending order data:', orderData);
+
         const response = await fetch('/api/orders', {
           method: 'POST',
           headers: {
@@ -122,6 +130,8 @@ export default function CheckoutPage() {
             clearCart();
           }, 1500);
         } else {
+          const errorData = await response.json();
+          console.error('Order creation failed:', errorData);
           alert('Failed to place order. Please try again.');
         }
       } catch (error) {
@@ -130,6 +140,17 @@ export default function CheckoutPage() {
       }
     }
   };
+
+  // Prevent hydration mismatch - don't render until mounted
+  if (!mounted) {
+    return (
+      <div className="py-16 pt-32 min-h-screen">
+        <div className="container max-w-6xl mx-auto">
+          <div className="text-center text-gray-400">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   if (orderPlaced) {
     return (
