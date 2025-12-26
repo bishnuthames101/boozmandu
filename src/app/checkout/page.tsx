@@ -93,7 +93,7 @@ export default function CheckoutPage() {
       try {
         // Create order via API
         const orderData = {
-          userId: user?.id || 'guest',
+          userId: user?.id || null,
           customerName: customerInfo.name,
           customerPhone: customerInfo.phone,
           customerAddress: customerInfo.address,
