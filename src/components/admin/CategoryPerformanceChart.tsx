@@ -41,7 +41,7 @@ export default function CategoryPerformanceChart({ data }: Props) {
             borderRadius: '6px',
             color: chartColors.text,
           }}
-          formatter={(value: number | undefined, name: string) => [
+          formatter={(value: number | undefined, name: string | undefined) => [
             name === 'revenue' ? `NPR ${(value || 0).toLocaleString()}` : (value || 0),
             name === 'revenue' ? 'Revenue' : 'Quantity Sold',
           ]}
