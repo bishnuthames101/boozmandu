@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Package, ShoppingCart, DollarSign, TrendingUp, Search, Filter } from 'lucide-react';
+import { Package, ShoppingCart, DollarSign, TrendingUp, Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import AnalyticsSection from '@/components/admin/AnalyticsSection';
 
 interface OrderItem {
   id: string;
@@ -30,6 +31,7 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAnalytics, setShowAnalytics] = useState(true);
   const router = useRouter();
 
   const fetchOrders = useCallback(async () => {
@@ -246,6 +248,28 @@ export default function AdminDashboard() {
               <DollarSign className="w-8 h-8 text-amber-500" />
             </div>
           </motion.div>
+        </div>
+
+        {/* Analytics Section */}
+        <div className="mb-8">
+          <button
+            onClick={() => setShowAnalytics(!showAnalytics)}
+            className="btn-secondary mb-4 flex items-center gap-2"
+          >
+            {showAnalytics ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {showAnalytics ? 'Hide' : 'Show'} Analytics
+          </button>
+
+          {showAnalytics && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AnalyticsSection token={localStorage.getItem('admin_token') || ''} />
+            </motion.div>
+          )}
         </div>
 
         {/* Filters */}
