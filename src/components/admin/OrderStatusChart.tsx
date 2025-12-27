@@ -45,7 +45,7 @@ export default function OrderStatusChart({ data }: Props) {
         />
         <Legend
           wrapperStyle={{ color: chartColors.text }}
-          formatter={(value, entry: any) => entry.payload.status}
+          formatter={(_value, entry: any) => entry.payload.status}
         />
       </PieChart>
     </ResponsiveContainer>
