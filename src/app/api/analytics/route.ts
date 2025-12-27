@@ -82,7 +82,6 @@ export async function GET(request: NextRequest) {
     }));
 
     // Calculate comparison to previous period
-    const { startDate: prevStartDate, endDate: prevEndDate } = calculateDateRange(period);
     const periodLength = endDate.getTime() - startDate.getTime();
     const actualPrevStartDate = new Date(startDate.getTime() - periodLength);
     const actualPrevEndDate = new Date(startDate.getTime() - 1);
