@@ -44,8 +44,8 @@ export default function TopProductsChart({ data }: Props) {
             borderRadius: '6px',
             color: chartColors.text,
           }}
-          formatter={(value: number, name: string) => [
-            name === 'revenue' ? `NPR ${value.toLocaleString()}` : value,
+          formatter={(value: number | undefined, name: string) => [
+            name === 'revenue' ? `NPR ${(value || 0).toLocaleString()}` : (value || 0),
             name === 'revenue' ? 'Revenue' : 'Quantity Sold',
           ]}
         />

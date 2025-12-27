@@ -36,7 +36,7 @@ export default function RevenueChart({ data }: Props) {
             borderRadius: '6px',
             color: chartColors.text,
           }}
-          formatter={(value: number) => [`NPR ${value.toLocaleString()}`, 'Revenue']}
+          formatter={(value: number | undefined) => [`NPR ${(value || 0).toLocaleString()}`, 'Revenue']}
         />
         <Line
           type="monotone"
