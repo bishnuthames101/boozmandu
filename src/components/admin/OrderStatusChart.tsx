@@ -22,7 +22,7 @@ export default function OrderStatusChart({ data }: Props) {
           cx="50%"
           cy="50%"
           labelLine={false}
-          label={({ status, percentage }) => `${status}: ${percentage.toFixed(1)}%`}
+          label={(props: any) => `${props.status}: ${props.percentage.toFixed(1)}%`}
           outerRadius={80}
           fill={chartColors.primary}
           dataKey="count"
