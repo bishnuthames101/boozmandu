@@ -98,6 +98,7 @@ export default function AdminLoginPage() {
                   className="input pl-10 pr-10"
                   placeholder="Enter admin password"
                   required
+                  autoComplete="off"
                 />
                 <button
                   type="button"

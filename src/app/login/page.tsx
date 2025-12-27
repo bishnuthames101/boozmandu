@@ -201,6 +201,7 @@ function LoginForm() {
                   onChange={handleInputChange}
                   className={`input pl-10 pr-10 ${errors.password ? 'border-red-500' : ''}`}
                   placeholder="Enter your password"
+                  autoComplete="off"
                 />
                 <button
                   type="button"
