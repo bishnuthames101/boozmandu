@@ -38,7 +38,7 @@ export default function OrderStatusChart({ data }: Props) {
             borderRadius: '6px',
             color: chartColors.text,
           }}
-          formatter={(value: number | undefined, name: string | undefined, props: any) => [
+          formatter={(value: number | undefined, _name: string | undefined, props: any) => [
             `${value || 0} orders (${props.payload.percentage.toFixed(1)}%)`,
             props.payload.status,
           ]}
