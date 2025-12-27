@@ -22,7 +22,7 @@ interface Order {
 }
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -32,10 +32,14 @@ export default function ProfilePage() {
   });
 
   const fetchUserOrders = useCallback(async () => {
-    if (!user) return;
+    if (!user || !token) return;
 
     try {
-      const response = await fetch(`/api/orders?userId=${user.id}`);
+      const response = await fetch('/api/orders', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         setOrders(data);
@@ -43,7 +47,7 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
-  }, [user]);
+  }, [user, token]);
 
   useEffect(() => {
     if (user) {
@@ -71,7 +75,8 @@ export default function ProfilePage() {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    const normalizedStatus = status.toLowerCase();
+    switch (normalizedStatus) {
       case 'pending': return 'text-yellow-500';
       case 'confirmed': return 'text-blue-500';
       case 'preparing': return 'text-orange-500';
@@ -83,7 +88,8 @@ export default function ProfilePage() {
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
+    const normalizedStatus = status.toLowerCase();
+    switch (normalizedStatus) {
       case 'pending': return 'Pending';
       case 'confirmed': return 'Confirmed';
       case 'preparing': return 'Preparing';
